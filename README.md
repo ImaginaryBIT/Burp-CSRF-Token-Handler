@@ -1,4 +1,4 @@
-# UpdateToken
+# Update CSRF Token
 This Burp extension is used to update CSRF tokens, similar to how Burp's cooke jar works. It parses the CSRF token from the set-cookie in HTTP response and update it in the header of the subsequent HTTP requests.
 
 ## Example
