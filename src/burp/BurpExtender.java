@@ -14,7 +14,7 @@ public class BurpExtender implements burp.IBurpExtender, burp.IHttpListener
 
     private String nextToken = "";
     private String tempToken = "";
-    private int nextTokenLen = 0;
+    private Boolean DEBUG = Boolean.TRUE;
 
     // implement IBurpExtender
     @Override
@@ -95,6 +95,10 @@ public class BurpExtender implements burp.IBurpExtender, burp.IHttpListener
             //end at ; Path=/
             for (String tokenPrefix: tokenPrefixes) {
                 while (response.contains(tokenPrefix)) {
+
+                    if(DEBUG==Boolean.TRUE)
+                    {stdout.println("DEBUG: response= " + response);}
+
                     //get next csrf token
                     String startMatch = tokenPrefix;
                     String endMatch = "; Path=/";
@@ -106,9 +110,8 @@ public class BurpExtender implements burp.IBurpExtender, burp.IHttpListener
                     response = response.substring(tokenEndIndex+1);
 
                     //filter wrong format token
-                    if (!tempToken.startsWith(";")&&!tempToken.startsWith("\""))
+                    if (!tempToken.startsWith(";")&&!tempToken.startsWith("\"")&&tempToken!=null) {
                         nextToken = tempToken;
-                        nextTokenLen = nextToken.length();
 
                         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                         Date date = new Date();
@@ -116,6 +119,7 @@ public class BurpExtender implements burp.IBurpExtender, burp.IHttpListener
                         stdout.println(dateFormat.format(date));
                         stdout.println("grabbed new CSRF token " + nextToken);
                         break;
+                    }
                 }
             }
         }
